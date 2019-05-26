@@ -6,6 +6,7 @@ from nltk.corpus import stopwords
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
+from reddit_geo_worldnews import look_for_country_names
 
 nltk.data.path.append("/data/corpora/")
 nltk.download("stopwords")
@@ -44,6 +45,7 @@ def all_dictionary(sub):
     return dictionary.most_common(3000)
 
 
+
 d = all_dictionary(data.title)
 """ for title, subreddit in zip(data.title, data.subreddit):
     dict = all_dictionary(title) """
@@ -77,8 +79,15 @@ feats, labels = features(data)
 feat_train, feat_test, labels_train, labels_test = train_test_split(feats, labels, test_size=0.3, random_state=42)
 
 model = RandomForestClassifier(n_estimators=20)
-model.fit(feat_train, label_train)
+model.fit(feat_train, labels_train)
 pred = model.predict(feat_test)
 
-accuracy_score(label_test, pred)
-print(classification_report(label_test, pred))
+accuracy_score(labels_test, pred)
+print(classification_report(labels_test, pred))
+
+
+## Adding features
+data['nwords'] = data.title.apply(lambda x: len(x.split()))
+data['nchar'] = data.title.apply(lambda x: len(x))
+data['ncoutries'] = data.title.apply(lambda x: len(look_for_country_names(x)))
+data['usmentions'] = data.title.apply(lambda x: Counter(look_for_country_names(x))['United States'])

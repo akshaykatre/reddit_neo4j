@@ -6,11 +6,12 @@ TO DO:
     with country names with two words 
 2. DONE: Possessive words: Words like Indian, Korean, 
     American - all still reflect country
-3. How often are two countries referred in the same 
+3. DONE: How often are two countries referred in the same 
     title? Build a module that helps identify all 
     countries in a title
 4. Find the subjects (essence) of the title, and 
     link it to the country
+5. DONE: Upload data to neo4j database 
 
 Minor fixes: 
 1. To be able to track abbreviations like "UK" 
@@ -129,9 +130,9 @@ def look_for_country_names(words):
 
 db_config = json.load(open('db-config.json', 'r'))
 print(db_config['port'])
-driver = GraphDatabase.driver('bolt://{0}:{1}'.format(db_config['host'], db_config['port']), auth=basic_auth(db_config['user'], db_config['pass']))
+#driver = GraphDatabase.driver('bolt://{0}:{1}'.format(db_config['host'], db_config['port']), auth=basic_auth(db_config['user'], db_config['pass']))
 
-session = driver.session()
+#session = driver.session()
 print("Gathering data..")
 #    x = pandas.read_csv("data/reddit_info.csv", delimiter="\t", header=None, names=['rank', 'download_time', 'timestamp', 'subreddit', 'id_art', 'ups', 'downs', 'title', 'num_comments', 'score', 'over_18'],error_bad_lines=False)
 #    x_df = pandas.DataFrame(x)
@@ -139,7 +140,7 @@ print("Gathering data..")
 #    xj = x.groupby(['subreddit', 'id_art'])
 
 
-writeto = open('queries.txt', 'w')
+#writeto = open('queries.txt', 'w')
 all_countries = []
 for title in titles:
     names = look_for_country_names(title)
@@ -153,13 +154,13 @@ for title in titles:
                 MERGE (secondary)-[:is_about]->(primary)
             '''
 
-            qtop = 'MERGE (primary: Country {{name:"{0}"}}) \n'.format(name) + 'MERGE (secondary: Article {{desr:"{0}"}}) \n'.format(title.lstrip(" ").replace('"', "'"))+'MERGE (secondary)-[:is_about]->(primary)\n'
-            print(query)
-            writeto.write(qtop)
+ #           qtop = 'MERGE (primary: Country {{name:"{0}"}}) \n'.format(name) + 'MERGE (secondary: Article {{desr:"{0}"}}) \n'.format(title.lstrip(" ").replace('"', "'"))+'MERGE (secondary)-[:is_about]->(primary)\n'
+ #           print(query)
+            #writeto.write(qtop)
             #pdb.set_trace()
-            session.run(query, {'Country': name, 'Article':title})
-session.close()
-writeto.close()
+            #session.run(query, {'Country': name, 'Article':title})
+#session.close()
+#writeto.close()
 country_nums = Counter(all_countries)
 
 sorted_country_names = OrderedDict(sorted(country_nums.items(), key=lambda kv: kv[1], reverse=True))
