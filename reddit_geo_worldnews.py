@@ -38,7 +38,7 @@ from neo4j.v1 import GraphDatabase, basic_auth
 nn_df = pandas.read_csv('data/demonyms.csv')
 nationalities_nation = {}
 for nationality, nation in nn_df.values:
-    nationalities_nation.update({nationality:nation})
+    nationalities_nation.update({nationality:nation}) ## To be case insensitive
 
 #x = x[x.subreddit==' worldnews']
 x = pandas.read_csv("data/reddit_info_worldnews.csv")
@@ -89,9 +89,12 @@ def look_for_country_names(words):
     places = []
     for txt in tokens:
         ## If the text refers to a nationality, switch it with the nation
-        ## Indian -> India, American -> America
-        if txt in nationalities_nation.keys():
-            txt = nationalities_nation[txt]
+        ## Indian -> India, American -> America; is now also case insensitive
+        if txt in nationalities_nation.keys() or txt in set(k.lower() for k in nationalities_nation.keys()): ## To be case insensitive
+            try:
+                txt = nationalities_nation[txt.capitalize()]
+            except KeyError:
+                txt = nationalities_nation[txt.upper()]
         ## Search for country names - these are single word countries
         try:
             cname = pycountry.countries.get(name=txt).name
