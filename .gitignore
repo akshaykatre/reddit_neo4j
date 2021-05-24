@@ -2,3 +2,4 @@ data/
 *.json
 *.ipynb
 redditenv/
+*.sh

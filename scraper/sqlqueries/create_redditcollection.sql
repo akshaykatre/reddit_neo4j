@@ -1,9 +1,9 @@
 -- Create the table that will be used for the data collection
 use redditdata
 
-drop table if exists topposts_all
+drop table if exists [raw].topposts_all
 
-CREATE TABLE topposts_all ( 
+CREATE TABLE [raw].topposts_all ( 
     id_art varchar(50), -- id of the post
     subreddit varchar(max), -- subreddit of post
     title varchar(max), -- title of post
@@ -18,4 +18,4 @@ CREATE TABLE topposts_all (
     constraint pk_postranks primary key (id_art, ranking)
 )
 
-SELECT * from topposts_all
+SELECT * from [raw].topposts_all

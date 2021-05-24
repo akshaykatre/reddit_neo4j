@@ -33,13 +33,13 @@ def probe_and_write():
                     "created_ts": datetime.fromtimestamp(i.created).strftime('%Y-%m-%d %H:%M:%S'),
                     "collection_ts": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     }
-        print(i.title)
-        query = ''' insert into topposts_all (subreddit, ups, downs, title, over_18, num_comments, score, id_art, ranking, created_ts, collection_ts)
+        #print(i.title)
+        query = ''' insert into [raw].topposts_all (subreddit, ups, downs, title, over_18, num_comments, score, id_art, ranking, created_ts, collection_ts)
         values ('{subreddit}' , {ups}, {downs}, '{title}', {over_18}, {num_comments}, {score}, '{id_art}', {ranking}, '{created_ts}', '{collection_ts}')
         '''.format(**postinfo)
 
 
-        print(query)
+        #print(query)
         try:
             cursor.execute(query)
             conn.commit()
@@ -51,6 +51,6 @@ def probe_and_write():
 
 probe_and_write()
 
-x = pandas.read_sql("SELECT * from topposts_all", conn)
-print(x)
+#x = pandas.read_sql("SELECT * from [raw].topposts_all", conn)
+#print(x)
 conn.close()
